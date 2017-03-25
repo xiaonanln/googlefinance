@@ -29,7 +29,7 @@ googleFinanceKeyToFullName = {
     u'ec'     : u'ExtHrsChange',
     u'ecp'    : u'ExtHrsChangePercent',
     u'pcls_fix': u'PreviousClosePrice', 
-    u'beta' : u'Bate', 
+    u'beta' : u'Beta', 
 }
 
 def buildUrl(symbols):
