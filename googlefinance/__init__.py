@@ -1,6 +1,6 @@
 import json
 import sys
-import demjson
+import json
 
 try:
     from urllib.request import Request, urlopen
@@ -22,13 +22,14 @@ googleFinanceKeyToFullName = {
     u'yld'    : u'Yield',
     u's'      : u'LastTradeSize',
     u'c'      : u'Change',
-    u'c'      : u'ChangePercent',
+    u'cp'      : u'ChangePercent',
     u'el'     : u'ExtHrsLastTradePrice',
     u'el_cur' : u'ExtHrsLastTradeWithCurrency',
     u'elt'    : u'ExtHrsLastTradeDateTimeLong',
     u'ec'     : u'ExtHrsChange',
     u'ecp'    : u'ExtHrsChangePercent',
-    u'pcls_fix': u'PreviousClosePrice'
+    u'pcls_fix': u'PreviousClosePrice', 
+    u'beta' : u'Bate', 
 }
 
 def buildUrl(symbols):
@@ -56,7 +57,7 @@ def requestNews(symbol):
     resp = urlopen(req)
     content = resp.read()
 
-    content_json = demjson.decode(content)
+    content_json = json.decode(content)
 
     #print "total news: ", content_json['total_number_of_news']
 
@@ -73,11 +74,7 @@ def replaceKeys(quotes):
     global googleFinanceKeyToFullName
     quotesWithReadableKey = []
     for q in quotes:
-        qReadableKey = {}
-        for k in googleFinanceKeyToFullName:
-            if k in q:
-                qReadableKey[googleFinanceKeyToFullName[k]] = q[k]
-        quotesWithReadableKey.append(qReadableKey)
+        quotesWithReadableKey.append({googleFinanceKeyToFullName.get(k, k):v for k, v in q.iteritems()})
     return quotesWithReadableKey
 
 def getQuotes(symbols):
@@ -101,7 +98,8 @@ def getQuotes(symbols):
     if type(symbols) == type('str'):
         symbols = [symbols]
     content = json.loads(request(symbols))
-    return replaceKeys(content);
+    return content 
+    # return replaceKeys(content);
 
 def getNews(symbol):
     return requestNews(symbol);
